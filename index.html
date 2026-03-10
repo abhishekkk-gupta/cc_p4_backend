@@ -1,29 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Currency Converter</title>
+
+<title>INR to USD Converter</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f5f7fb;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+text-align:center;
+width:300px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input{
+padding:10px;
+width:70%;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+background:#007bff;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+#result{
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+}
+
+#loading{
+display:none;
+margin-top:10px;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h2>INR to USD Converter</h2>
+<div class="container">
+
+<h2>INR → USD Converter</h2>
 
 <input type="number" id="amount" placeholder="Enter INR">
+
+<br><br>
+
 <button onclick="convert()">Convert</button>
 
-<h3 id="result"></h3>
+<div id="loading">Converting...</div>
+
+<div id="result"></div>
+
+</div>
 
 <script>
-async function convert() {
 
-    let amount = document.getElementById("amount").value;
+async function convert(){
 
-    let response = await fetch("https://cc-p4-1.onrender.com/convert?amount=" + amount);
+let amount = document.getElementById("amount").value;
 
-    let data = await response.json();
-
-    document.getElementById("result").innerText =
-        amount + " INR = " + data.USD + " USD";
+if(amount === ""){
+document.getElementById("result").innerText = "Please enter amount";
+return;
 }
+
+document.getElementById("loading").style.display="block";
+document.getElementById("result").innerText="";
+
+try{
+
+let response = await fetch("https://cc-p4-1.onrender.com/convert?amount=" + amount);
+
+let data = await response.json();
+
+let usd = Number(data.USD).toFixed(2);
+
+document.getElementById("result").innerText =
+`${amount} INR = ${usd} USD`;
+
+}
+
+catch(error){
+
+document.getElementById("result").innerText =
+"Error connecting to server";
+
+}
+
+document.getElementById("loading").style.display="none";
+
+}
+
 </script>
 
 </body>
